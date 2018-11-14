@@ -22,7 +22,7 @@ app.use('/game/:gameid', function(req, res) {
           return res;
       });
       console.log('deets done')
-      res.render('deets', {title: gameDeets.name, gameDeets: gameDeets})
+      res.render('deets', {title: gameDeets.name, game: gameDeets[0]})
     });
 });
 
