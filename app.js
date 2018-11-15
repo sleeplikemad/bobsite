@@ -22,7 +22,7 @@ app.use('/posts/', function(req, res) {
     
       var json = JSON.parse(jsonString)
       var reviewList = json.reviews.map(function(e) {
-          var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : site_name, created : created_at}
+          var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at}
           return res;
       });
       console.log('gen reviews done')

@@ -17,7 +17,8 @@ html
       .row
         for game in gameNameList
           .col-6.col-sm-4.col-md-3.game
-            img(src= game.image)
+            a(href= "/game/" + game.id)
+              img(src= game.image)
             a(href= "/game/" + game.id) #{game.name} 
             if (game.price > 0) 
               span.price ($#{game.price}) 

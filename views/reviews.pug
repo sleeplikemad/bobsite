@@ -15,10 +15,10 @@ html
       h1= title
       p Articles 
       .row
-        for review in reviews
-          .col-6.col-sm-4.col-md-3.review
+        for review in reviewList
+          .col-6.col-sm-4.col-md-6.review
             a(href= review.url)
-                img(src= review.image)
+                img(src= review.image width= "100" height= "100")
             a(href= review.url) #{review.title} 
             div.postdate Posted on #{review.created} at
             a(href= review.url) #{review.sname}
