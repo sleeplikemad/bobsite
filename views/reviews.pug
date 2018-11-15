@@ -8,7 +8,6 @@ html
         padding: 10px;
         border-style: groove;
         border-radius: 8px;
-
     }
   body
     
@@ -22,11 +21,13 @@ html
           .col-6.col-sm-4.col-md-6.review
             a(href= review.url)
                 img(src= review.image)
-            div.rtitle 
-                a(href= review.url) #{review.title} 
-            div.postdate Posted on #{review.created} at 
+            .rtitle 
+                h3
+                    a(href= review.url) #{review.title} 
+            .gamename Game: #{review.game}
+            .postdate Posted on #{review.created} at 
                 a(href= review.url) #{review.sname}
-            div.description Description: "#{review.desc}"
+            .description.text-muted #{review.desc}
         
         if(page > 1)
             a(href= "/posts/" + (page - 1)) Previous 

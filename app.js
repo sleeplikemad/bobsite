@@ -18,48 +18,51 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/posts/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10&include-game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
   
-      var json = JSON.parse(jsonString)
-      var reviewList = json.reviews.map(function(e) {
-          var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at}
-          return res;
-      });
-      console.log('Review page ' + page + ' done')
-      res.render('reviews', {page: page, title : "The Latest Game Reviews!", reviewList: reviewList})
+    var json = JSON.parse(jsonString)
+    var reviewList = json.reviews.map(function(e) {
+      var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at, game : e.game.name}
+      return res;
     });
+    
+    console.log('Review page ' + page + ' done')
+    res.render('reviews', {page: page, title : "The Latest Game Reviews!", reviewList: reviewList})
+  });
 });
 
 app.use('/game/:gameid', function(req, res) {
 
   request({ url: "https://beta.5colorcombo.com/api/search?ids=" + req.params.gameid} , function(err, response, jsonString) {
-    
-      var json = JSON.parse(jsonString)
-      var gameDeets = json.games.map(function(e) {
-          var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, year : e.year_published, minplayers : e.min_players, maxplayers : e.max_players, minplaytime : e.min_playtime, maxplaytime : e.max_playtime, age : e.min_age, desc : e.description_preview}
-          return res;
-      });
-      console.log('deets done')
-      res.render('deets', {title: gameDeets.name, game: gameDeets[0]})
+  
+    var json = JSON.parse(jsonString)
+    var gameDeets = json.games.map(function(e) {
+        var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, year : e.year_published, minplayers : e.min_players, maxplayers : e.max_players, minplaytime : e.min_playtime, maxplaytime : e.max_playtime, age : e.min_age, desc : e.description_preview}
+        return res;
     });
+    console.log('deets done')
+    res.render('deets', {title: gameDeets[0].name, game: gameDeets[0]})
+  });
 });
 
 app.use('/', function(req, res) {
   
   request({ url: "https://beta.5colorcombo.com/api/search?order-by=reddit-day-count&lt-price=20&gt-price=0" } , function(err, response, jsonString) {
-      var json = JSON.parse(jsonString)
-      var gameNameList = json.games.map(function(e) {
-          var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
-          var over = discountPerc < 0;
-          var ndiscountPerc = Math.abs(discountPerc);
-          var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
-          return res;
-          
-      });
-      console.log('index done')
+    var json = JSON.parse(jsonString)
+    var gameNameList = json.games.map(function(e) {
+        var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
+        var over = discountPerc < 0;
+        var ndiscountPerc = Math.abs(discountPerc);
+        var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
+        return res;
+        
+    });
+    console.log('index done')
 
-      res.render('index', {title: "Bob's Alphasite", gameNameList: gameNameList })
+    res.render('index', {title: "Bob's Alphasite", gameNameList: gameNameList })
   });
+
+
 });
 
 
