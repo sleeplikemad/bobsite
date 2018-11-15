@@ -16,17 +16,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-app.use('/posts/', function(req, res) {
-
-  request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10" } , function(err, response, jsonString) {
-    
+app.use('/posts/:pageid', function(req, res) {  
+  var page = parseInt(req.params.pageid, 10)
+  request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  
       var json = JSON.parse(jsonString)
       var reviewList = json.reviews.map(function(e) {
           var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at}
           return res;
       });
-      console.log('gen reviews done')
-      res.render('reviews', {title : "The Latest Game Reviews!", reviewList: reviewList})
+      console.log('Review page ' + page + ' done')
+      res.render('reviews', {page: page, title : "The Latest Game Reviews!", reviewList: reviewList})
     });
 });
 
