@@ -14,6 +14,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+app.use('/posts/', function(req, res) {
+
+  request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10" } , function(err, response, jsonString) {
+    
+      var json = JSON.parse(jsonString)
+      var reviewList = json.reviews.map(function(e) {
+          var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : site_name, created : created_at}
+          return res;
+      });
+      console.log('gen reviews done')
+      res.render('reviews', {title : "The Latest Game Reviews!", reviewList: reviewList})
+    });
+});
+
 app.use('/game/:gameid', function(req, res) {
 
   request({ url: "https://beta.5colorcombo.com/api/search?ids=" + req.params.gameid} , function(err, response, jsonString) {
@@ -42,7 +58,7 @@ app.use('/', function(req, res) {
       });
       console.log('index done')
 
-      res.render('index', {title: "Bob", gameNameList: gameNameList })
+      res.render('index', {title: "Bob's Alphasite", gameNameList: gameNameList })
   });
 });
 

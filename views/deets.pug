@@ -16,7 +16,8 @@ html
       
       .row
         .col-6.game
-            img(src= game.image)
+            a(href=game.url)
+                img(src= game.image)
             p Game Details For #{game.name}
                 
         .col-6
