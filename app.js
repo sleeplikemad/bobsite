@@ -31,6 +31,23 @@ app.use('/posts/:pageid', function(req, res) {
   });
 });
 
+app.use('/game/browse/:pageid', function(req, res) {
+  var page = parseInt(req.params.pageid, 10)
+  request({ url: "https://beta.5colorcombo.com/api/search?order-by=reddit-day-count&limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
+    var json = JSON.parse(jsonString)
+    var gameNameList = json.games.map(function(e) {
+        var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
+        var over = discountPerc < 0;
+        var ndiscountPerc = Math.abs(discountPerc);
+        var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
+        return res;
+    });
+    console.log('browse page ' + page + ' done')
+
+    res.render('index', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList })
+  });
+});
+
 app.use('/game/:gameid', function(req, res) {
 
   request({ url: "https://beta.5colorcombo.com/api/search?ids=" + req.params.gameid} , function(err, response, jsonString) {
@@ -47,7 +64,7 @@ app.use('/game/:gameid', function(req, res) {
 
 app.use('/', function(req, res) {
   
-  request({ url: "https://beta.5colorcombo.com/api/search?order-by=reddit-day-count&lt-price=20&gt-price=0" } , function(err, response, jsonString) {
+  request({ url: "https://beta.5colorcombo.com/api/search?order-by=reddit-day-count&limit=28" } , function(err, response, jsonString) {
     var json = JSON.parse(jsonString)
     var gameNameList = json.games.map(function(e) {
         var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
@@ -59,11 +76,11 @@ app.use('/', function(req, res) {
     });
     console.log('index done')
 
-    res.render('index', {title: "Bob's Alphasite", gameNameList: gameNameList })
+    res.render('index', {page : 1, title: "Bob's Alphasite", gameNameList: gameNameList })
   });
-
-
 });
+
+
 
 
 
