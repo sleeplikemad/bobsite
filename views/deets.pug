@@ -18,6 +18,15 @@ html
         .col-6.game
             a(href=game.url)
                 img(src= game.image height = 400)
+            div.review External Site Reviews: 
+                each rev in reviews
+                    div.eachrev
+                        a(href=rev.url)
+                          if(rev.icon)
+                            img.mr-1(src=rev.icon, height = 30)
+                          else
+                            img.mr-1(src="/images/linkicon.jpg", height = 40)
+                        a(href=rev.url) #{rev.site}
                 
         .col-6
             a(href=game.url) #{game.name}
@@ -37,12 +46,7 @@ html
             div.msrp MSRP: $#{game.msrp}
             div.description Game Description: #{game.desc}
 
-            div.review External Site Reviews: 
-                each rev in reviews
-                    div.eachrev
-                        a(href=rev.url)
-                            img.mr-1(src=rev.icon, height = 30)
-                        a(href=rev.url) #{rev.site}
+            
                 
             
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")

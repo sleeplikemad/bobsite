@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//NOT FINISHED, SEARCH GAME, SEE GAMES OR BOTH 
+//FINISHED, SEARCH GAME, SEE GAMES AND RESPECTIVE REVIEWS
 app.use('/games/search', function(req, res) {
   var page = 1
   if(req.query.pageid)
@@ -86,7 +86,7 @@ app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {
   });
 });
 
-//FINISHED, browse games with next/prev
+//FINISHED, browse DAY COUNT games with next/prev
 app.use('/games/top/browse/:pageid', function(req, res) {
   var page = parseInt(req.params.pageid, 10)
   request({ url: "https://beta.5colorcombo.com/api/search?order-by=reddit-day-count&limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
@@ -104,7 +104,7 @@ app.use('/games/top/browse/:pageid', function(req, res) {
   });
 });
 
-//FINISHED, browse games with next/prev
+//FINISHED, browse ALL TIME games with next/prev
 app.use('/games/browse/:pageid', function(req, res) {
   var page = parseInt(req.params.pageid, 10)
   request({ url: "https://beta.5colorcombo.com/api/search?limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
