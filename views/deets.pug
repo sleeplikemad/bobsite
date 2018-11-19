@@ -12,13 +12,12 @@ html
     include includes/navbar.pug
     
     .container#main
-      h1= title
+      h2= "Game Details for: " + title
       
       .row
         .col-6.game
             a(href=game.url)
-                img(src= game.image)
-            p Game Details For #{game.name}
+                img(src= game.image height = 400)
                 
         .col-6
             a(href=game.url) #{game.name}
@@ -38,7 +37,13 @@ html
             div.msrp MSRP: $#{game.msrp}
             div.description Game Description: #{game.desc}
 
-            //add game review links 
+            div.review External Site Reviews: 
+                each rev in reviews
+                    div.eachrev
+                        a(href=rev.url)
+                            img.mr-1(src=rev.icon, height = 30)
+                        a(href=rev.url) #{rev.site}
+                
             
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js", integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49", crossorigin="anonymous")

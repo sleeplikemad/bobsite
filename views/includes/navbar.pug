@@ -1,5 +1,8 @@
 style.
-    .h4 {
+    .games {
+        padding: 10px;
+    }
+    .reviews{
         padding: 10px;
     }
     .navbar {
@@ -14,13 +17,13 @@ div.navbar.navbar-dark.bg-dark.shadow-sm
 
     a(href="/")
         img(src="/images/bob.svg" width="90" height="50")
-    h4
+    .games
         a(href="/games/browse/1" style="color: white") Games
-    h4
+    .reviews
         a(href="/reviews/browse/1" style="color: white") Reviews
-    form.search-container.float-right
+    form.search-container.float-right(action='/games/search' )
         .form-group.form-inline
-            input.form-control(type='text', name='search', placeholder='Search games and reviews...', size = '50')
+            input.form-control(type='text', name='gamename', placeholder='Search games and reviews...', size = '50')
             input.form-control(type='submit', value='Search') 
         
                 

@@ -15,9 +15,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //NOT FINISHED, SEARCH GAME, SEE GAMES OR BOTH 
-app.use('/games/search/:gamename/:pageid', function(req, res) {
-  var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://beta.5colorcombo.com/api/search?name=" + req.params.gamename + "&limit=10&skip=" + (page-1)*10} , function(err, response, jsonString) {
+app.use('/games/search', function(req, res) {
+  var page = 1
+  if(req.query.pageid)
+    page = parseInt(req.query.pageid)
+  
+  request({ url: "https://beta.5colorcombo.com/api/search?name=" + req.query.gamename + "&limit=10&skip=" + (page-1)*10} , function(err, response, jsonString) {
     var json = JSON.parse(jsonString)
     console.log(json)
     var gameNameList = json.games.map(function(e) {
@@ -25,11 +28,30 @@ app.use('/games/search/:gamename/:pageid', function(req, res) {
         var over = discountPerc < 0;
         var ndiscountPerc = Math.abs(discountPerc);
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
+        
         return res;
     });
-    console.log('search page ' + page + ' done')
 
-    res.render('gamesearch', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList, name : req.params.gamename})
+    var reviewsToFetchLength = gameNameList.length;
+    var fetchedReviews = function() {
+      reviewsToFetchLength--;
+      if (reviewsToFetchLength == 0) {        
+        console.log('search page ' + page + ' done')
+        res.render('gamesearch', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList, name : req.query.gamename});
+      }
+    }
+
+    gameNameList.map(function(e) {
+      request({ url: "https://beta.5colorcombo.com/api/game/reviews?game-id=" + e.id}, function(err, response, jsonString) {
+        var json2 = JSON.parse(jsonString);
+        var reviewList = json2.reviews.map(function(f) {
+          var res = {icon : f.icon_url, site : f.site_name, url : f.url};
+          return res;
+        });
+        e.reviewList = reviewList;
+        fetchedReviews();
+      });
+    })
   });
 });
 
@@ -110,8 +132,16 @@ app.use('/games/:gameid', function(req, res) {
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, year : e.year_published, minplayers : e.min_players, maxplayers : e.max_players, minplaytime : e.min_playtime, maxplaytime : e.max_playtime, age : e.min_age, desc : e.description_preview}
         return res;
     });
-    console.log('deets done')
-    res.render('deets', {title: gameDeets[0].name, game: gameDeets[0]})
+    
+    request({ url: "https://beta.5colorcombo.com/api/game/reviews?game-id=" + req.params.gameid}, function(err, response, jsonString) {
+      var json2 = JSON.parse(jsonString);
+      var reviewList = json2.reviews.map(function(f) {
+        var res = {icon : f.icon_url, site : f.site_name, url : f.url};
+        return res;
+      });
+      console.log('deets done');
+      res.render('deets', {title: gameDeets[0].name, game: gameDeets[0], reviews : reviewList});
+    });
   });
 });
 

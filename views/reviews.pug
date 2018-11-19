@@ -16,14 +16,14 @@ html
     .container#main
       h1= title
       
-      p Articles 
+      p Come check out what our reviewers have to say about your favorite games! 
       .row
         for review in reviewList
           .col-6.col-sm-4.col-md-6.review
             a(href= review.url)
                 img(src= review.image)
             .rtitle 
-                h3
+                h5
                     a(href= review.url) #{review.title} 
             .gamename Game: 
                 a(href= "/games/" + review.gameid) #{review.game}

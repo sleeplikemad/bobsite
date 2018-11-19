@@ -6,14 +6,19 @@ html
       .price {
         color: red;
       }
-      .game img{
+      .details img{
         height : 200px
       }
       .game {
-        text-align: center;
-        padding: 10px;
+        padding: 20px;
         border-style: groove;
         border-radius: 8px;
+      }
+      .details {
+        text-align: left;
+      }
+      .reviews {
+        text-align: left;
       }
     include includes/navbar.pug
     
@@ -22,29 +27,41 @@ html
       p Welcome to #{title}!  Here are your search results: 
       .row
         for game in gameNameList
-          .col-6.col-sm-4.col-md-3.game
-            a(href= "/games/" + game.id)
-              img(src= game.image)
-            div.name
-              a(href= "/games/" + game.id) #{game.name} 
-            if (game.price > 0) 
-              span.price ($#{game.price}) 
-            else 
-              span.price ($#{game.msrp}) 
-            if (game.msrp != 0 && game.msrp != game.price)
-              span.discountPerc (#{game.discountPerc}% 
-              if game.over
-                span.perc over)
-              else
-                span.perc off)
+          .col-6.game
+            .row
+              .col-4.details
+                a(href= "/games/" + game.id)
+                  img(src= game.image)
+                div.name
+                  a(href= "/games/" + game.id) #{game.name} 
+                if (game.price > 0) 
+                  span.price ($#{game.price}) 
+                else 
+                  span.price ($#{game.msrp}) 
+                if (game.msrp != 0 && game.msrp != game.price)
+                  span.discountPerc (#{game.discountPerc}% 
+                  if game.over
+                    span.perc over)
+                  else
+                    span.perc off)
+              .col-8.reviews 
+                if (game.reviewList != 0)
+                  div.review External Site Reviews:
+                  for rev in game.reviewList
+                    .each
+                      a(href=rev.url)
+                          img.mr-1(src=rev.icon, height = 40)
+                      a(href=rev.url) #{rev.site}
+                else 
+                  span.nothing No Reviews Available :(
 
         if(page > 1)
           if (page == 2)
             a(href= "/" + (page - 1)) Previous 
           else
-            a(href= "/games/search/" + name + "/" + (page - 1)) Previous 
+            a(href= "/games/search?gamename=" + name + "&pageid=" + (page - 1)) Previous 
           span.divvie | 
-        a(href= "/games/search/" + name + "/" + (page + 1)) Next
+        a(href= "/games/search?gamename=" + name + "&pageid=" + (page + 1)) Next
         
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js", integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49", crossorigin="anonymous")
