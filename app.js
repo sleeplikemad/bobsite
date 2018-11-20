@@ -71,7 +71,7 @@ app.use('/videos/browse/:pageid', function(req, res) {
   });
 });
 
-//NOT FINISHED, view all reviews by a specific reviewer
+//NOT FINISHED, view all videos by a specific video creator.  NEEDS order by and ascend/descend options
 app.use('/videos/creator/:creator/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
   request({ url: "https://beta.5colorcombo.com/api/game/videos?limit=10&include-game=true&skip=" + ((page-1)*10) + "&channel-name=" + req.params.creator } , function(err, response, jsonString) {
