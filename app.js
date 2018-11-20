@@ -55,6 +55,39 @@ app.use('/games/search', function(req, res) {
   });
 });
 
+//NOT FINISHED, browse latest videos with next/prev.  NEEDS order by and ascend/descend options
+app.use('/videos/browse/:pageid', function(req, res) {  
+  var page = parseInt(req.params.pageid, 10)
+  request({ url: "https://beta.5colorcombo.com/api/game/videos?limit=10&include-game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  
+    var json = JSON.parse(jsonString)
+    var videoList = json.videos.map(function(e) {
+      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at, published : e.published_date, gameid : e.game.id}
+      return res;
+    });
+    
+    console.log('Video page ' + page + ' done')
+    res.render('videos', {page: page, title : "The Latest Video Reviews!", videoList: videoList})
+  });
+});
+
+//NOT FINISHED, view all reviews by a specific reviewer
+app.use('/videos/creator/:creator/:pageid', function(req, res) {  
+  var page = parseInt(req.params.pageid, 10)
+  request({ url: "https://beta.5colorcombo.com/api/game/videos?limit=10&include-game=true&skip=" + ((page-1)*10) + "&channel-name=" + req.params.creator } , function(err, response, jsonString) {
+  
+    var json = JSON.parse(jsonString)
+    console.log(json);
+    var videoList = json.videos.map(function(e) {
+      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at, published : e.published_date, gameid : e.game.id}
+      return res;
+    });
+    
+    console.log('Video creator page ' + page + ' done')
+    res.render('creator', {page: page, title : "Video Reviews from '" + req.params.creator + "'", name: videoList[0].channel, videoList: videoList})
+  });
+});
+
 //FINISHED, browse latest reviews with next/prev
 app.use('/reviews/browse/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
@@ -71,6 +104,7 @@ app.use('/reviews/browse/:pageid', function(req, res) {
   });
 });
 
+//FINISHED, view all reviews by a specific reviewer
 app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
   request({ url: "https://beta.5colorcombo.com/api/game/reviews?limit=10&include-game=true&skip=" + ((page-1)*10) + "&site-name=" + req.params.sitename } , function(err, response, jsonString) {

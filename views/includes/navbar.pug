@@ -1,8 +1,11 @@
 style.
-    .games {
+    .games{
         padding: 10px;
     }
     .reviews{
+        padding: 10px;
+    }
+    .videos{
         padding: 10px;
     }
     .navbar {
@@ -21,6 +24,8 @@ div.navbar.navbar-dark.bg-dark.shadow-sm
         a(href="/games/browse/1" style="color: white") Games
     .reviews
         a(href="/reviews/browse/1" style="color: white") Reviews
+    .videos
+        a(href="/videos/browse/1" style="color: white") Videos
     form.search-container.float-right(action='/games/search' )
         .form-group.form-inline
             input.form-control(type='text', name='gamename', placeholder='Search games and reviews...', size = '50')
