@@ -5,37 +5,53 @@ html
         height: 200px;
     }
     .video {
-        padding: 10px;
-        border-style: groove;
+        padding: 20px;
+        background-color:white;
         border-radius: 8px;
+        margin: 40px;
+        margin-top: 10px;
+    }
+    .sorting {
+        text-align: right;
     }
   body
-    
     include includes/navbar.pug
     
-    .container#main
-      h1= title
-      
-      p Come check out what Youtubers have to say about your favorite games! 
-      .row
-        for video in videoList
-          .col-6.col-sm-4.col-md-6.video
-            a(href= video.url)
-                img(src= video.image)
-            .vtitle 
-                h5
-                    a(href= video.url) #{video.title} 
-            .gamename Game: 
-                a(href= "/games/" + video.gameid) #{video.game}
-            .postdate Posted on #{video.created} 
-            .pubdate Published on #{video.published} by 
-                a(href="/videos/creator/" + video.channel + "/1") #{video.channel}
-            .views Views:  #{video.views}
-        
-        if(page > 1)
-            a(href= "/videos/browse/" + (page - 1)) Previous 
-            span.divvie | 
-        a(href= "/videos/browse/" + (page + 1)) Next
+    .container-fluid#main
+        .container.actual
+            .row
+                .col-8.head
+                    h1= title
+                    p Come check out what Youtubers have to say about your favorite games! 
+                .col-4.sorting
+                    .form-group(action="/videos/browse/")
+                        label.control-label.requiredField(for='SortBy')
+                            | Sort By: 
+                            .col-xs-12
+                                select#propertyType.select.form-control.input-lg(form='SortBy', name='filterType')
+                                    option(value='view-count') Views
+                                    option(value='created-at') Post Date
+                                    option(value='published-at') Publish Date
+
+            .row
+                for video in videoList
+                    .col-6.col-sm-4.col-md-5.video.center
+                        a(href= video.url)
+                            img(src= video.image)
+                        .vtitle 
+                            h5
+                                a(href= video.url) #{video.title} 
+                        .gamename Game: 
+                            a(href= "/games/" + video.gameid) #{video.game}
+                        .postdate Posted on #{video.created} 
+                        .pubdate Published on #{video.published} by 
+                            a(href="/videos/creator/" + video.channel + "/1") #{video.channel}
+                        .views Views:  #{video.views}
+                    
+                if(page > 1)
+                    a(href= "/videos/browse/" + (page - 1)) Previous 
+                    span.divvie | 
+                a(href= "/videos/browse/" + (page + 1)) Next
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js", integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49", crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js", integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy", crossorigin="anonymous")

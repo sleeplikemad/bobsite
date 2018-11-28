@@ -62,12 +62,12 @@ app.use('/videos/browse/:pageid', function(req, res) {
   
     var json = JSON.parse(jsonString)
     var videoList = json.videos.map(function(e) {
-      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at, published : e.published_date, gameid : e.game.id}
+      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at.substring(0, 10), published : e.published_date.substring(0, 10), gameid : e.game.id}
       return res;
     });
     
     console.log('Video page ' + page + ' done')
-    res.render('videos', {page: page, title : "The Latest Video Reviews!", videoList: videoList})
+    res.render('videos', { page: page, title : "The Latest Video Reviews!", videoList: videoList})
   });
 });
 
@@ -79,7 +79,7 @@ app.use('/videos/creator/:creator/:pageid', function(req, res) {
     var json = JSON.parse(jsonString)
     console.log(json);
     var videoList = json.videos.map(function(e) {
-      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at, published : e.published_date, gameid : e.game.id}
+      var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at.substring(0, 10), published : e.published_date.substring(0, 10), gameid : e.game.id}
       return res;
     });
     
@@ -95,7 +95,7 @@ app.use('/reviews/browse/:pageid', function(req, res) {
   
     var json = JSON.parse(jsonString)
     var reviewList = json.reviews.map(function(e) {
-      var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at, game : e.game.name, gameid : e.game.id}
+      var res = {id : e.id, title : e.title, url : e.url, image : e.image_url, icon : e.icon_url, desc : e.description, sname : e.site_name, created : e.created_at.substring(0, 10), game : e.game.name, gameid : e.game.id}
       return res;
     });
     
@@ -160,21 +160,56 @@ app.use('/games/browse/:pageid', function(req, res) {
 app.use('/games/:gameid', function(req, res) {
 
   request({ url: "https://beta.5colorcombo.com/api/search?ids=" + req.params.gameid} , function(err, response, jsonString) {
-  
+    console.log(jsonString)
     var json = JSON.parse(jsonString)
     var gameDeets = json.games.map(function(e) {
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, year : e.year_published, minplayers : e.min_players, maxplayers : e.max_players, minplaytime : e.min_playtime, maxplaytime : e.max_playtime, age : e.min_age, desc : e.description_preview}
         return res;
     });
     
+    var desc1 = gameDeets[0].desc;
+    var desc2 = "";
+    var more = false;
+    if(gameDeets[0].desc.length > 430) {
+      more = true;
+      desc1 = gameDeets[0].desc.substring(0,429);
+      desc2 = gameDeets[0].desc;
+    }
+    console.log("deets desc")
+
     request({ url: "https://beta.5colorcombo.com/api/game/reviews?game-id=" + req.params.gameid}, function(err, response, jsonString) {
-      var json2 = JSON.parse(jsonString);
-      var reviewList = json2.reviews.map(function(f) {
+      var json = JSON.parse(jsonString);
+      var reviewList = json.reviews.map(function(f) {
         var res = {icon : f.icon_url, site : f.site_name, url : f.url};
         return res;
       });
-      console.log('deets done');
-      res.render('deets', {title: gameDeets[0].name, game: gameDeets[0], reviews : reviewList});
+      console.log("deets reviews")
+
+      request({ url: "https://beta.5colorcombo.com/api/game/images?game-id=" + req.params.gameid}, function(err, response, jsonString) {
+        var json = JSON.parse(jsonString);
+        var imageList = json.images.map(function(g) {
+          var res = {url : g.url};
+          return res;
+        });
+        console.log("Deets images");
+        request({ url: "https://beta.5colorcombo.com/api/game/prices?game-id=" + req.params.gameid}, function(err, response, jsonString) {
+          var json = JSON.parse(jsonString);
+          var priceList = json.prices.map(function(h) {
+            var res = {price : h.price_text, url : h.url, site : h.store_name, country : h.country};
+            return res;
+          });
+          console.log("Deets prices");
+          request({ url: "https://beta.5colorcombo.com/api/game/videos?game-id=" + req.params.gameid}, function(err, response, jsonString) {
+            var json = JSON.parse(jsonString);
+            var vidList = json.videos.map(function(i) {
+              var res = {icon : i.thumb_url, title : i.title, url : i.url};
+              return res;
+            });
+            console.log('deets done')
+            res.render('deets', {title: gameDeets[0].name, game: gameDeets[0], reviews : reviewList, videos: vidList, desc1: desc1, desc2: desc2, more: more, images : imageList, prices : priceList});
+          });
+        });
+      });
     });
   });
 });

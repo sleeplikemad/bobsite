@@ -1,6 +1,5 @@
 html
-  head
-    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
+  include includes/header.pug
   body
     style.
       .price {
@@ -12,39 +11,40 @@ html
       .game {
         text-align: center;
         padding: 10px;
-        border-style: groove;
+        background-color:white;
         border-radius: 8px;
       }
     include includes/navbar.pug
     
-    .container#main
-      h1= 'Game Browse'
-      p Here is a list of most talked about games on Reddit of all time!
-      .row
-        for game in gameNameList
-          .col-6.col-sm-4.col-md-3.game
-            a(href= "/games/" + game.id)
-              img(src= game.image)
-            div.name
-              a(href= "/games/" + game.id) #{game.name} 
-            if (game.price > 0) 
-              span.price ($#{game.price}) 
-            else 
-              span.price ($#{game.msrp}) 
-            if (game.msrp != 0 && game.msrp != game.price)
-              span.discountPerc (#{game.discountPerc}% 
-              if game.over
-                span.perc over)
-              else
-                span.perc off)
+    .container-fluid#main
+      .container.actual
+        h1= 'Game Browse'
+        p Here is a list of most talked about games on Reddit of all time!
+        .row
+          for game in gameNameList
+            .col-6.col-sm-4.col-md-3.game
+              a(href= "/games/" + game.id)
+                img(src= game.image)
+              div.name
+                a(href= "/games/" + game.id) #{game.name} 
+              if (game.price > 0) 
+                span.price ($#{game.price}) 
+              else 
+                span.price ($#{game.msrp}) 
+              if (game.msrp != 0 && game.msrp != game.price)
+                span.discountPerc (#{game.discountPerc}% 
+                if game.over
+                  span.perc over)
+                else
+                  span.perc off)
 
-        if(page > 1)
-          if (page == 2)
-            a(href= "/" + (page - 1)) Previous 
-          else
-            a(href= "/games/browse/" + (page - 1)) Previous 
-          span.divvie | 
-        a(href= "/games/browse/" + (page + 1)) Next
+          if(page > 1)
+            if (page == 2)
+              a(href= "/" + (page - 1)) Previous 
+            else
+              a(href= "/games/browse/" + (page - 1)) Previous 
+            span.divvie | 
+          a(href= "/games/browse/" + (page + 1)) Next
         
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js", integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49", crossorigin="anonymous")
