@@ -22,7 +22,6 @@ app.use('/games/search', function(req, res) {
   
   request({ url: "https://beta.5colorcombo.com/api/search?name=" + req.query.gamename + "&limit=10&skip=" + (page-1)*10} , function(err, response, jsonString) {
     var json = JSON.parse(jsonString)
-    console.log(json)
     var gameNameList = json.games.map(function(e) {
         var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
         var over = discountPerc < 0;
@@ -36,7 +35,6 @@ app.use('/games/search', function(req, res) {
     var fetchedExternals = function() {
       externalsToFetchLength--;
       if (externalsToFetchLength == 0) {        
-        console.log('search page ' + page + ' done')
         res.render('gamesearch', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList, name : req.query.gamename});
       }
     }
@@ -55,7 +53,6 @@ app.use('/games/search', function(req, res) {
             var res = {icon : i.thumb_url, title : i.title, url : i.url};
             return res;
           });
-          console.log(vidList)
           e.vidList = vidList;
           fetchedExternals();
         });
@@ -74,8 +71,6 @@ app.use('/videos/browse/:pageid', function(req, res) {
       var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at.substring(0, 10), published : e.published_date.substring(0, 10), gameid : e.game.id}
       return res;
     });
-    
-    console.log('Video page ' + page + ' done')
     res.render('videos', { page: page, title : "The Latest Video Reviews!", videoList: videoList})
   });
 });
@@ -86,13 +81,11 @@ app.use('/videos/creator/:creator/:pageid', function(req, res) {
   request({ url: "https://beta.5colorcombo.com/api/game/videos?limit=10&include-game=true&skip=" + ((page-1)*10) + "&channel-name=" + req.params.creator } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
-    console.log(json);
     var videoList = json.videos.map(function(e) {
       var res = {title : e.title, url : e.url, channel : e.channel_name, image : e.image_url, views : e.views, game : e.game.name, created : e.created_at.substring(0, 10), published : e.published_date.substring(0, 10), gameid : e.game.id}
       return res;
     });
     
-    console.log('Video creator page ' + page + ' done')
     res.render('creator', {page: page, title : "Video Reviews from '" + req.params.creator + "'", name: videoList[0].channel, videoList: videoList})
   });
 });
@@ -108,7 +101,6 @@ app.use('/reviews/browse/:pageid', function(req, res) {
       return res;
     });
     
-    console.log('Review page ' + page + ' done')
     res.render('reviews', {page: page, title : "The Latest Game Reviews!", reviewList: reviewList})
   });
 });
@@ -124,7 +116,6 @@ app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {
       return res;
     });
     
-    console.log('Reviewer page ' + page + ' done')
     res.render('reviewer', {page: page, title : "Game Reviews from " + req.params.sitename, name: reviewList[0].sname, reviewList: reviewList})
   });
 });
@@ -141,7 +132,6 @@ app.use('/games/top/browse/:pageid', function(req, res) {
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
         return res;
     });
-    console.log('browse page ' + page + ' done')
 
     res.render('index', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList })
   });
@@ -159,7 +149,6 @@ app.use('/games/browse/:pageid', function(req, res) {
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, over : over, discountPerc : ndiscountPerc}
         return res;
     });
-    console.log('browse all time page ' + page + ' done')
 
     res.render('games', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList })
   });
@@ -169,7 +158,6 @@ app.use('/games/browse/:pageid', function(req, res) {
 app.use('/games/:gameid', function(req, res) {
 
   request({ url: "https://beta.5colorcombo.com/api/search?ids=" + req.params.gameid} , function(err, response, jsonString) {
-    console.log(jsonString)
     var json = JSON.parse(jsonString)
     var gameDeets = json.games.map(function(e) {
         var res = {id : e.id, name : e.name, price : e.price, msrp : e.msrp, url : e.url, image : e.image_url, year : e.year_published, minplayers : e.min_players, maxplayers : e.max_players, minplaytime : e.min_playtime, maxplaytime : e.max_playtime, age : e.min_age, desc : e.description_preview}
@@ -184,7 +172,6 @@ app.use('/games/:gameid', function(req, res) {
       desc1 = gameDeets[0].desc.substring(0,429);
       desc2 = gameDeets[0].desc;
     }
-    console.log("deets desc")
 
     request({ url: "https://beta.5colorcombo.com/api/game/reviews?game-id=" + req.params.gameid}, function(err, response, jsonString) {
       var json = JSON.parse(jsonString);
@@ -192,7 +179,6 @@ app.use('/games/:gameid', function(req, res) {
         var res = {icon : f.icon_url, site : f.site_name, url : f.url};
         return res;
       });
-      console.log("deets reviews")
 
       request({ url: "https://beta.5colorcombo.com/api/game/images?game-id=" + req.params.gameid}, function(err, response, jsonString) {
         var json = JSON.parse(jsonString);
@@ -200,21 +186,18 @@ app.use('/games/:gameid', function(req, res) {
           var res = {url : g.url};
           return res;
         });
-        console.log("Deets images");
         request({ url: "https://beta.5colorcombo.com/api/game/prices?game-id=" + req.params.gameid}, function(err, response, jsonString) {
           var json = JSON.parse(jsonString);
           var priceList = json.prices.map(function(h) {
             var res = {price : h.price_text, url : h.url, site : h.store_name, country : h.country};
             return res;
           });
-          console.log("Deets prices");
           request({ url: "https://beta.5colorcombo.com/api/game/videos?game-id=" + req.params.gameid}, function(err, response, jsonString) {
             var json = JSON.parse(jsonString);
             var vidList = json.videos.map(function(i) {
               var res = {icon : i.thumb_url, title : i.title, url : i.url};
               return res;
             });
-            console.log('deets done')
             res.render('deets', {title: gameDeets[0].name, game: gameDeets[0], reviews : reviewList, videos: vidList, desc1: desc1, desc2: desc2, more: more, images : imageList, prices : priceList});
           });
         });
@@ -236,7 +219,6 @@ app.use('/', function(req, res) {
         return res;
         
     });
-    console.log('index done')
 
     res.render('index', {page : 1, title: "Bob's Alphasite", gameNameList: gameNameList })
   });
