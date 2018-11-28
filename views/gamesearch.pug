@@ -14,6 +14,8 @@ html
         padding: 20px;
         background-color:white;
         border-radius: 8px;
+        margin: 40px;
+        margin-top: 10px;
       }
       .details {
         padding: 20px;
@@ -31,7 +33,7 @@ html
         p Welcome to #{title}!  Here are your search results: 
         .row
           for game in gameNameList
-            .col-6.game
+            .col-5.game
               .row
                 .col-6.details
                   a(href= "/games/" + game.id)
@@ -48,19 +50,35 @@ html
                       span.perc over)
                     else
                       span.perc off)
-                .col-6.reviews 
-                  if (game.reviewList != 0)
-                    div.review External Site Reviews:
-                    for rev in game.reviewList
-                      .each
-                        a(href=rev.url)
-                            if(rev.icon)
-                              img.mr-1(src=rev.icon, height = 20)
-                            else
-                              img.mr-1(src="/images/linkicon.jpg", height = 20)
-                        a(href=rev.url) #{rev.site}
-                  else 
-                    span.nothing No Reviews Available :(
+                .col-6.external 
+                  .row
+                    .col-12.reviews
+                      if (game.reviewList.length != 0)
+                        div.review External Site Reviews:
+                        for rev in game.reviewList
+                          .eachr
+                            a(href=rev.url)
+                                if(rev.icon)
+                                  img.mr-1(src=rev.icon, height = 20)
+                                else
+                                  img.mr-1(src="/images/linkicon.jpg", height = 20)
+                            a(href=rev.url) #{rev.site}
+                      else 
+                        span.nothing No Reviews Available 
+                  .row          
+                    .col-12.vreviews 
+                      if (game.vidList && game.vidList.length != 0)
+                        div.video Related Videos:
+                        for vid in game.vidList
+                          .eachv
+                            a(href=vid.url)
+                                if(vid.icon)
+                                  img.mr-1(src=vid.icon, height = 20)
+                                else
+                                  img.mr-1(src="/images/linkicon.jpg", height = 20)
+                            a(href=vid.url) #{vid.title}
+                      else 
+                        span.nothing No Videos Available 
 
           if(page > 1)
             if (page == 2)

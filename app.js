@@ -32,10 +32,10 @@ app.use('/games/search', function(req, res) {
         return res;
     });
 
-    var reviewsToFetchLength = gameNameList.length;
-    var fetchedReviews = function() {
-      reviewsToFetchLength--;
-      if (reviewsToFetchLength == 0) {        
+    var externalsToFetchLength = gameNameList.length;
+    var fetchedExternals = function() {
+      externalsToFetchLength--;
+      if (externalsToFetchLength == 0) {        
         console.log('search page ' + page + ' done')
         res.render('gamesearch', {page : page, title: "Bob's Alphasite", gameNameList: gameNameList, name : req.query.gamename});
       }
@@ -49,7 +49,16 @@ app.use('/games/search', function(req, res) {
           return res;
         });
         e.reviewList = reviewList;
-        fetchedReviews();
+        request({ url: "https://beta.5colorcombo.com/api/game/videos?game-id=" + e.id}, function(err, response, jsonString) {
+          var json = JSON.parse(jsonString);
+          var vidList = json.videos.map(function(i) {
+            var res = {icon : i.thumb_url, title : i.title, url : i.url};
+            return res;
+          });
+          console.log(vidList)
+          e.vidList = vidList;
+          fetchedExternals();
+        });
       });
     })
   });
