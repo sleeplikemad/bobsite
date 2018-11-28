@@ -167,9 +167,9 @@ app.use('/games/:gameid', function(req, res) {
     var desc1 = gameDeets[0].desc;
     var desc2 = "";
     var more = false;
-    if(gameDeets[0].desc.length > 430) {
+    if(gameDeets[0].desc.length > 490) {
       more = true;
-      desc1 = gameDeets[0].desc.substring(0,429);
+      desc1 = gameDeets[0].desc.substring(0,490);
       desc2 = gameDeets[0].desc;
     }
 
