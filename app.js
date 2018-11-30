@@ -5,6 +5,7 @@ var request = require('request');
 var app = express();
 var debug = require('debug')('myapp:server');
 var http = require('http');
+var util = require('util');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
