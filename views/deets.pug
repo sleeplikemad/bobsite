@@ -80,12 +80,6 @@ html
                                 span(class="carousel-control-next-icon" aria-hidden="true")
                                 span(class="sr-only") Next
                         
-                        
-                        
-                        
-                        
-                        
-                        
                         div.extraimg
                             each img in images
                                 .eachimg
@@ -94,28 +88,34 @@ html
                     .col-6.details
                         h2  
                             a(href=game.url) #{game.name}
-                        div.year Year Published: 
-                            if game.year
+                        if game.year
+                            div.year Year Published: 
                                 span.year #{game.year}
-                            else
-                                span.year N/A
-                        div.player Number of Players: #{game.minplayers} 
-                            if game.minplayers != game.maxplayers
-                                span.rangeplayers - #{game.maxplayers}
+                        if game.minplayers
+                            div.player Number of Players: #{game.minplayers} 
+                                if game.minplayers != game.maxplayers
+                                    span.rangeplayers - #{game.maxplayers}
                             
-                        div.playtime Play Time: #{game.minplaytime} - #{game.maxplaytime} minutes
-                        div.age Recommended Age: #{game.age} and Above
+                        if game.minplaytime
+                            div.playtime Play Time: #{game.minplaytime} - #{game.maxplaytime} minutes
+                        if game.age
+                            div.age Recommended Age: #{game.age} and Above
                         if game.price
                             div.fprice Price: $#{game.price}
-                        div.msrp MSRP: $#{game.msrp}
+                        if game.msrp
+                            div.msrp MSRP: $#{game.msrp}
                         div.description Game Description: 
-                            span#short #{desc1} 
-                            span#readmore #{desc2}
-                            if more
-                                .more
-                                    a(href = '#', id="link") Show more...
-                            .less
-                                a(href = '#', id="otherLink") Show less
+                            if(desc1)
+                                span#short #{desc1} 
+                                span#readmore #{desc2}
+                                if more
+                                    .more
+                                        a(href = '#', id="link") Show more...
+                                .less
+                                    a(href = '#', id="otherLink") Show less
+                            else 
+                                span N/A
+
                         
 
                 .row
