@@ -81,10 +81,7 @@ html
                         span.nothing No Videos Available 
           h4
             if(page > 1)
-                if (page == 2)
-                  a(href= "/" + (page - 1)) Previous 
-                else
-                  a(href= "/games/search?gamename=" + name + "&pageid=" + (page - 1) style="color: black") Previous 
+                a(href= "/games/search?gamename=" + name + "&pageid=" + (page - 1) style="color: black") Previous 
                 span.divvie | 
             if(gameNameList == 10)
               a(href= "/games/search?gamename=" + name + "&pageid=" + (page + 1) style="color: black") Next

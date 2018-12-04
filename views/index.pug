@@ -39,10 +39,7 @@ html
                   span.perc off)
           h4
             if(page > 1)
-              if (page == 2)
-                a(href= "/" + (page - 1)) Previous 
-              else
-                a(href= "/games/top/browse/" + (page - 1) style="color: black") Previous 
+              a(href= "/games/top/browse/" + (page - 1) style="color: black") Previous 
               span.divvie | 
             if (gameNameList.length == 28)
               a(href= "/games/top/browse/" + (page + 1) style="color: black") Next
