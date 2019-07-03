@@ -94,7 +94,7 @@ app.use('/videos/creator/:creator/:pageid', function(req, res) {
 //FINISHED, browse latest reviews with next/prev
 app.use('/reviews/browse/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include-game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include_game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
     var reviewList = json.reviews.map(function(e) {
