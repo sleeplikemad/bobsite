@@ -41,14 +41,14 @@ app.use('/games/search', function(req, res) {
     }
 
     gameNameList.map(function(e) {
-      request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&game-id=" + e.id}, function(err, response, jsonString) {
+      request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&game_id=" + e.id}, function(err, response, jsonString) {
         var json2 = JSON.parse(jsonString);
         var reviewList = json2.reviews.map(function(f) {
           var res = {icon : f.icon_url, site : f.site_name, url : f.url};
           return res;
         });
         e.reviewList = reviewList;
-        request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&game-id=" + e.id}, function(err, response, jsonString) {
+        request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&game_id=" + e.id}, function(err, response, jsonString) {
           var json = JSON.parse(jsonString);
           var vidList = json.videos.map(function(i) {
             var res = {icon : i.thumb_url, title : i.title, url : i.url};
@@ -65,7 +65,7 @@ app.use('/games/search', function(req, res) {
 //NOT FINISHED, browse latest videos with next/prev.  NEEDS order by and ascend/descend options
 app.use('/videos/browse/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&limit=10&include-game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&limit=10&include_game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
     var videoList = json.videos.map(function(e) {
@@ -79,7 +79,7 @@ app.use('/videos/browse/:pageid', function(req, res) {
 //NOT FINISHED, view all videos by a specific video creator.  NEEDS order by and ascend/descend options
 app.use('/videos/creator/:creator/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&limit=10&include-game=true&skip=" + ((page-1)*10) + "&channel-name=" + req.params.creator } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&limit=10&include_game=true&skip=" + ((page-1)*10) + "&channel-name=" + req.params.creator } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
     var videoList = json.videos.map(function(e) {
@@ -94,7 +94,7 @@ app.use('/videos/creator/:creator/:pageid', function(req, res) {
 //FINISHED, browse latest reviews with next/prev
 app.use('/reviews/browse/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include-game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include_game=true&skip=" + ((page-1)*10) } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
     var reviewList = json.reviews.map(function(e) {
@@ -109,7 +109,7 @@ app.use('/reviews/browse/:pageid', function(req, res) {
 //FINISHED, view all reviews by a specific reviewer
 app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {  
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include-game=true&skip=" + ((page-1)*10) + "&site-name=" + req.params.sitename } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&limit=10&include_game=true&skip=" + ((page-1)*10) + "&site-name=" + req.params.sitename } , function(err, response, jsonString) {
   
     var json = JSON.parse(jsonString)
     var reviewList = json.reviews.map(function(e) {
@@ -124,7 +124,7 @@ app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {
 //FINISHED, browse DAY COUNT games with next/prev
 app.use('/games/top/browse/:pageid', function(req, res) {
   var page = parseInt(req.params.pageid, 10)
-  request({ url: "https://www.boardgameatlas.com/api/search?client_id=1Joh8La5B1&order-by=reddit-day-count&limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/search?client_id=1Joh8La5B1&order_by=reddit_day_count&limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
     var json = JSON.parse(jsonString)
     var gameNameList = json.games.map(function(e) {
         var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
@@ -210,7 +210,7 @@ app.use('/games/:gameid', function(req, res) {
 //ONGOING, homepage subject to change
 app.use('/', function(req, res) {
   
-  request({ url: "https://www.boardgameatlas.com/api/search?client_id=1Joh8La5B1&order-by=reddit-day-count&limit=28" } , function(err, response, jsonString) {
+  request({ url: "https://www.boardgameatlas.com/api/search?client_id=1Joh8La5B1&order_by=reddit_day_count&limit=28" } , function(err, response, jsonString) {
     var json = JSON.parse(jsonString)
     var gameNameList = json.games.map(function(e) {
         var discountPerc = parseFloat(Math.round(100*(1.0 - e.price/e.msrp))).toFixed(0);
