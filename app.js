@@ -122,6 +122,7 @@ app.use('/reviews/reviewer/:sitename/:pageid', function(req, res) {
 });
 
 //FINISHED, browse DAY COUNT games with next/prev
+//testing new API call format
 app.use('/games/top/browse/:pageid', function(req, res) {
   var page = parseInt(req.params.pageid, 10)
   request({ url: "https://www.boardgameatlas.com/api/search?client_id=1Joh8La5B1&order-by=reddit-day-count&limit=28&skip=" + (page-1)*28} , function(err, response, jsonString) {
