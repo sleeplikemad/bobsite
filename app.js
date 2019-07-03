@@ -175,26 +175,26 @@ app.use('/games/:gameid', function(req, res) {
       desc2 = gameDeets[0].desc;
     }
 
-    request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&game-id=" + req.params.gameid}, function(err, response, jsonString) {
+    request({ url: "https://www.boardgameatlas.com/api/game/reviews?client_id=1Joh8La5B1&game_id=" + req.params.gameid}, function(err, response, jsonString) {
       var json = JSON.parse(jsonString);
       var reviewList = json.reviews.map(function(f) {
         var res = {icon : f.icon_url, site : f.site_name, url : f.url};
         return res;
       });
 
-      request({ url: "https://www.boardgameatlas.com/api/game/images?client_id=1Joh8La5B1&game-id=" + req.params.gameid}, function(err, response, jsonString) {
+      request({ url: "https://www.boardgameatlas.com/api/game/images?client_id=1Joh8La5B1&game_id=" + req.params.gameid}, function(err, response, jsonString) {
         var json = JSON.parse(jsonString);
         var imageList = json.images.map(function(g) {
           var res = {url : g.url};
           return res;
         });
-        request({ url: "https://www.boardgameatlas.com/api/game/prices?client_id=1Joh8La5B1&game-id=" + req.params.gameid}, function(err, response, jsonString) {
+        request({ url: "https://www.boardgameatlas.com/api/game/prices?client_id=1Joh8La5B1&game_id=" + req.params.gameid}, function(err, response, jsonString) {
           var json = JSON.parse(jsonString);
           var priceList = json.prices.map(function(h) {
             var res = {price : h.price_text, url : h.url, site : h.store_name, country : h.country};
             return res;
           });
-          request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&game-id=" + req.params.gameid}, function(err, response, jsonString) {
+          request({ url: "https://www.boardgameatlas.com/api/game/videos?client_id=1Joh8La5B1&game_id=" + req.params.gameid}, function(err, response, jsonString) {
             var json = JSON.parse(jsonString);
             var vidList = json.videos.map(function(i) {
               var res = {icon : i.thumb_url, title : i.title, url : i.url};
